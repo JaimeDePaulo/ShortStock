@@ -37,17 +37,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           
           if (!profileData) {
             console.log("AuthProvider: Criando novo perfil para o utilizador no Firestore...");
-            // Auto-create basic profile if it doesn't exist
+            
+            // Verificar se é o primeiro utilizador do sistema
+            const allUsers = await dbService.list('users');
+            const isFirstUser = allUsers.length === 0;
+            
+            // Se for o primeiro, é ADMIN, senão é OPERATOR
+            const role = isFirstUser ? UserRole.ADMIN : UserRole.OPERATOR;
+            
             const newProfile = {
               uid: user.uid,
               name: user.displayName || user.email?.split('@')[0] || 'Utilizador',
               email: user.email || '',
-              role: UserRole.OPERATOR, // Default to operator
+              role: role,
               createdAt: new Date(),
               lastLogin: new Date(),
             };
+            
             await dbService.set('users', user.uid, newProfile);
             profileData = { id: user.uid, ...newProfile } as UserProfile;
+            console.log(`AuthProvider: Perfil criado como ${role}`);
           } else {
             // Update last login
             await dbService.update('users', user.uid, { lastLogin: new Date() });

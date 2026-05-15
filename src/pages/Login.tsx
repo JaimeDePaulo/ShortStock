@@ -172,31 +172,12 @@ export default function Login() {
           <button
             onClick={handleGoogleLogin}
             disabled={loading}
+            type="button"
             className="w-full flex items-center justify-center gap-3 py-2.5 px-4 bg-white border border-slate-200 rounded-xl font-bold text-slate-700 text-[13px] hover:bg-slate-50 transition-all shadow-sm active:scale-[0.98] disabled:opacity-50"
           >
             <img src="https://www.google.com/favicon.ico" alt="Google" className="w-4 h-4" />
             Google Workspace
           </button>
-
-          <div className="pt-2 border-t border-slate-50 mt-4">
-            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest text-center mb-3">Modo Demonstração</p>
-            <div className="grid grid-cols-2 gap-3">
-              <button 
-                onClick={() => handleDemoLogin('admin')}
-                className="flex items-center justify-center gap-2 py-2 px-3 rounded-lg border border-slate-100 text-slate-500 hover:bg-blue-50 hover:border-blue-100 hover:text-blue-600 transition-all group"
-              >
-                <ShieldCheck className="w-3.5 h-3.5" />
-                <span className="text-[11px] font-bold">Admin</span>
-              </button>
-              <button 
-                onClick={() => handleDemoLogin('operator')}
-                className="flex items-center justify-center gap-2 py-2 px-3 rounded-lg border border-slate-100 text-slate-500 hover:bg-indigo-50 hover:border-indigo-100 hover:text-indigo-600 transition-all"
-              >
-                <UserIcon className="w-3.5 h-3.5" />
-                <span className="text-[11px] font-bold">Operador</span>
-              </button>
-            </div>
-          </div>
 
           {error && (
             <motion.div 
