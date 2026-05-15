@@ -3,6 +3,14 @@ export enum UserRole {
   OPERATOR = 'OPERATOR'
 }
 
+export interface UserSession {
+  id: string;
+  userId: string;
+  email: string;
+  timestamp: any;
+  type: 'LOGIN';
+}
+
 export interface UserProfile {
   id: string;
   name: string;

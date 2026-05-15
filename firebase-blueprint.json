@@ -104,6 +104,18 @@
         "address": { "type": "string" }
       },
       "required": ["name"]
+    },
+    "UserSession": {
+      "title": "UserSession",
+      "description": "User login session",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "email": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "type": { "type": "string", "enum": ["LOGIN"] }
+      },
+      "required": ["userId", "email", "timestamp", "type"]
     }
   },
   "firestore": {
@@ -113,6 +125,7 @@
     "users": { "schema": "User", "description": "App users" },
     "invoices": { "schema": "Invoice", "description": "Sales invoices" },
     "suppliers": { "schema": "Supplier", "description": "Stock suppliers" },
-    "customers": { "schema": "Customer", "description": "Stock customers" }
+    "customers": { "schema": "Customer", "description": "Stock customers" },
+    "user_sessions": { "schema": "UserSession", "description": "User login logs" }
   }
 }

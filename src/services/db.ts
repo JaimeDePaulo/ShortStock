@@ -85,6 +85,18 @@ export const dbService = {
     }
   },
 
+  async set(col: string, id: string, data: any) {
+    try {
+      const docRef = doc(db, col, id);
+      await setDoc(docRef, {
+        ...data,
+        updatedAt: Timestamp.now()
+      });
+    } catch (error) {
+      handleFirestoreError(error, OperationType.WRITE, `${col}/${id}`);
+    }
+  },
+
   async add(col: string, data: any) {
     try {
       const docRef = await addDoc(collection(db, col), {

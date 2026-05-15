@@ -58,14 +58,25 @@ service cloud.firestore {
              data.role in ['ADMIN', 'OPERATOR'];
     }
 
+    function isValidSession(data) {
+      return data.keys().hasAll(['userId', 'email', 'timestamp', 'type']) &&
+             data.userId == request.auth.uid &&
+             data.type == 'LOGIN';
+    }
+
     // -- COLLECTIONS --
 
     match /users/{userId} {
       allow get: if isSignedIn() && (request.auth.uid == userId || isAdmin());
       allow list: if isAdmin();
-      allow create: if isSignedIn() && request.auth.uid == userId && incoming().role == 'OPERATOR'; // Default role
+      allow create: if isSignedIn() && request.auth.uid == userId && incoming().role == 'OPERATOR';
       allow update: if isAdmin();
       allow delete: if isAdmin();
+    }
+
+    match /user_sessions/{sessionId} {
+      allow read: if isAdmin();
+      allow create: if isSignedIn() && isValidSession(incoming());
     }
 
     match /products/{productId} {

@@ -15,6 +15,7 @@ import History from './pages/History';
 import Reports from './pages/Reports';
 import Config from './pages/Configuracoes';
 import Login from './pages/Login';
+import Users from './pages/Users';
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
@@ -81,6 +82,14 @@ export default function App() {
             <PrivateRoute>
               <Layout>
                 <Reports />
+              </Layout>
+            </PrivateRoute>
+          } />
+
+          <Route path="/utilizadores" element={
+            <PrivateRoute>
+              <Layout>
+                <Users />
               </Layout>
             </PrivateRoute>
           } />

@@ -36,11 +36,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             name: user.displayName || 'Utilizador',
             email: user.email || '',
             role: UserRole.OPERATOR, // Default to operator
+            createdAt: new Date(),
           };
-          await dbService.add('users', newProfile);
-          // Wait a bit and fetch again
-          profileData = await dbService.get('users', user.uid) as UserProfile;
+          await dbService.set('users', user.uid, newProfile);
+          profileData = { id: user.uid, ...newProfile } as UserProfile;
         }
+
+        // Register entry (login log)
+        await dbService.add('user_sessions', {
+          userId: user.uid,
+          email: user.email,
+          timestamp: new Date(),
+          type: 'LOGIN'
+        });
+
         setProfile(profileData);
       } else {
         setProfile(null);

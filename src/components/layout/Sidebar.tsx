@@ -35,6 +35,7 @@ export default function Sidebar() {
   ];
 
   if (isAdmin) {
+    menuItems.push({ name: 'Utilizadores', icon: Users, path: '/utilizadores' });
     menuItems.push({ name: 'Configurações', icon: Settings, path: '/configuracoes' });
   }
 
