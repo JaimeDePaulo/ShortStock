@@ -3,10 +3,10 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Regras temporárias para teste conforme solicitado pelo utilizador
-    // TODO: Endurecer após validar o fluxo de autenticação
+    // ACESSO PÚBLICO (Removido login conforme solicitado)
+    // ATENÇÃO: Qualquer pessoa com acesso à URL pode ler e escrever dados.
     match /{document=**} {
-      allow read, write: if request.auth != null;
+      allow read, write: if true;
     }
   }
 }

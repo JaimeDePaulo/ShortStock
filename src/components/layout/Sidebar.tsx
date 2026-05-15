@@ -23,8 +23,6 @@ function cn(...inputs: ClassValue[]) {
 }
 
 export default function Sidebar() {
-  const { isAdmin } = useAuth();
-
   const menuItems = [
     { name: 'Dashboard', icon: LayoutDashboard, path: '/' },
     { name: 'Produtos', icon: Package, path: '/produtos' },
@@ -32,12 +30,8 @@ export default function Sidebar() {
     { name: 'Saídas', icon: ArrowUpRight, path: '/saidas' },
     { name: 'Facturas', icon: FileText, path: '/facturas' },
     { name: 'Relatórios', icon: PieChart, path: '/relatorios' },
+    { name: 'Configurações', icon: Settings, path: '/configuracoes' },
   ];
-
-  if (isAdmin) {
-    menuItems.push({ name: 'Utilizadores', icon: Users, path: '/utilizadores' });
-    menuItems.push({ name: 'Configurações', icon: Settings, path: '/configuracoes' });
-  }
 
   const handleSignOut = async () => {
     if (confirm('Tem certeza que deseja sair?')) {
@@ -76,19 +70,6 @@ export default function Sidebar() {
             <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]"></div>
             Firebase Conectado
           </div>
-        </div>
-        
-        <button
-          onClick={handleSignOut}
-          className="w-full flex items-center gap-3 px-4 py-2 text-[13px] text-slate-400 hover:text-rose-400 transition-colors"
-        >
-          <LogOut className="w-4 h-4" />
-          <span className="font-medium">Sair da Sessão</span>
-        </button>
-
-        <div className="mt-6 pt-4 border-t border-white/5 text-center">
-          <p className="text-[10px] text-slate-600 font-bold uppercase tracking-widest">ShortStock ERP</p>
-          <p className="text-[9px] text-slate-500 mt-1">Desenvolvido por Jaime de Paulo</p>
         </div>
       </div>
     </aside>
