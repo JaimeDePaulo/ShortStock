@@ -24,33 +24,47 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    console.log("AuthProvider: Inicializando monitoramento de estado de auth...");
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      console.log("AuthProvider: Estado de Auth alterado:", user ? `Logado como ${user.email}` : "Deslogado");
       setUser(user);
+      
       if (user) {
-        // Fetch profile
-        let profileData = await dbService.get('users', user.uid) as UserProfile;
-        
-        if (!profileData) {
-          // Auto-create basic profile if it doesn't exist
-          const newProfile = {
-            name: user.displayName || 'Utilizador',
-            email: user.email || '',
-            role: UserRole.OPERATOR, // Default to operator
-            createdAt: new Date(),
-          };
-          await dbService.set('users', user.uid, newProfile);
-          profileData = { id: user.uid, ...newProfile } as UserProfile;
+        try {
+          // Fetch profile
+          let profileData = await dbService.get('users', user.uid) as UserProfile;
+          console.log("AuthProvider: Perfil carregado:", profileData ? "Sucesso" : "Não encontrado");
+          
+          if (!profileData) {
+            console.log("AuthProvider: Criando novo perfil para o utilizador no Firestore...");
+            // Auto-create basic profile if it doesn't exist
+            const newProfile = {
+              uid: user.uid,
+              name: user.displayName || user.email?.split('@')[0] || 'Utilizador',
+              email: user.email || '',
+              role: UserRole.OPERATOR, // Default to operator
+              createdAt: new Date(),
+              lastLogin: new Date(),
+            };
+            await dbService.set('users', user.uid, newProfile);
+            profileData = { id: user.uid, ...newProfile } as UserProfile;
+          } else {
+            // Update last login
+            await dbService.update('users', user.uid, { lastLogin: new Date() });
+          }
+
+          // Register entry (session log)
+          await dbService.add('user_sessions', {
+            userId: user.uid,
+            email: user.email,
+            timestamp: new Date(),
+            type: 'LOGIN'
+          });
+
+          setProfile(profileData);
+        } catch (error) {
+          console.error("AuthProvider Error (Fetch/Create Profile):", error);
         }
-
-        // Register entry (login log)
-        await dbService.add('user_sessions', {
-          userId: user.uid,
-          email: user.email,
-          timestamp: new Date(),
-          type: 'LOGIN'
-        });
-
-        setProfile(profileData);
       } else {
         setProfile(null);
       }

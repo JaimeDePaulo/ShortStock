@@ -12,11 +12,13 @@ export interface UserSession {
 }
 
 export interface UserProfile {
-  id: string;
+  id: string; // Document ID (usually same as uid)
+  uid: string;
   name: string;
   email: string;
   role: UserRole;
   createdAt: any;
+  lastLogin?: any;
 }
 
 export interface Product {

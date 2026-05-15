@@ -1,20 +1,75 @@
-import { useState } from 'react';
-import { LogIn, Mail, Lock, ShieldCheck, User as UserIcon } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { LogIn, Mail, Lock, ShieldCheck, User as UserIcon, ArrowRight, UserPlus } from 'lucide-react';
 import { motion } from 'motion/react';
-import { signInWithPopup, googleProvider, auth } from '../lib/firebase';
+import { useNavigate } from 'react-router-dom';
+import { 
+  signInWithPopup, 
+  googleProvider, 
+  auth, 
+  signInWithEmailAndPassword, 
+  createUserWithEmailAndPassword 
+} from '../lib/firebase';
+import { useAuth } from '../components/AuthProvider';
 import { cn } from '../lib/utils';
 
 export default function Login() {
+  const { user, loading: authLoading } = useAuth();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isRegistering, setIsRegistering] = useState(false);
+
+  // Redirecionar se já estiver logado
+  useEffect(() => {
+    if (user && !authLoading) {
+      console.log("Login: Utilizador já autenticado, redirecionando para dashboard...");
+      navigate('/');
+    }
+  }, [user, authLoading, navigate]);
+
+  const handleEmailAuth = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email || !password) {
+      setError('Por favor preencha todos os campos.');
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+    console.log(`Login: Tentando ${isRegistering ? 'registo' : 'login'} para ${email}...`);
+
+    try {
+      if (isRegistering) {
+        await createUserWithEmailAndPassword(auth, email, password);
+        console.log("Login: Conta criada com sucesso!");
+      } else {
+        await signInWithEmailAndPassword(auth, email, password);
+        console.log("Login: Autenticação efetuada!");
+      }
+    } catch (err: any) {
+      console.error("Login Error:", err);
+      let message = 'Ocorreu um erro na autenticação.';
+      
+      if (err.code === 'auth/email-already-in-use') message = 'Este email já está a ser utilizado.';
+      if (err.code === 'auth/invalid-credential') message = 'Email ou palavra-passe incorretos.';
+      if (err.code === 'auth/weak-password') message = 'A palavra-passe deve ter pelo menos 6 caracteres.';
+      if (err.code === 'auth/user-not-found') message = 'Utilizador não encontrado.';
+      
+      setError(message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleGoogleLogin = async () => {
     setLoading(true);
     setError(null);
+    console.log("Login: Tentando autenticação por Google...");
     try {
       await signInWithPopup(auth, googleProvider);
+      console.log("Login: Google Auth Sucesso!");
     } catch (err: any) {
       setError('Erro ao fazer login com Google.');
       console.error(err);
@@ -24,7 +79,7 @@ export default function Login() {
   };
 
   const handleDemoLogin = (role: 'admin' | 'operator') => {
-    alert(`Para esta demonstração, por favor use o botão "Google Login". O sistema atribuirá automaticamente o perfil de ${role}.`);
+    alert(`Modo Demo: Para testar como ${role}, aceda via Email/Google. O sistema gerará o perfil automaticamente.`);
   };
 
   return (
@@ -53,7 +108,7 @@ export default function Login() {
         </div>
 
         <div className="p-8 space-y-6">
-          <div className="space-y-4">
+          <form onSubmit={handleEmailAuth} className="space-y-4">
             <div className="space-y-1.5">
               <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest pl-1">Endereço de Email</label>
               <div className="relative">
@@ -64,6 +119,7 @@ export default function Login() {
                   className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-[13px] focus:ring-1 focus:ring-blue-600 outline-none transition-all"
                   value={email}
                   onChange={e => setEmail(e.target.value)}
+                  required
                 />
               </div>
             </div>
@@ -71,7 +127,9 @@ export default function Login() {
             <div className="space-y-1.5">
               <div className="flex justify-between items-center px-1">
                 <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest">Palavra-passe</label>
-                <button className="text-[10px] font-bold text-blue-600 hover:underline">Esqueceu a senha?</button>
+                {!isRegistering && (
+                  <button type="button" className="text-[10px] font-bold text-blue-600 hover:underline">Esqueceu a senha?</button>
+                )}
               </div>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
@@ -81,17 +139,29 @@ export default function Login() {
                   className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-[13px] focus:ring-1 focus:ring-blue-600 outline-none transition-all"
                   value={password}
                   onChange={e => setPassword(e.target.value)}
+                  required
+                  minLength={6}
                 />
               </div>
             </div>
 
             <button 
+              type="submit"
               disabled={loading}
-              className="w-full py-3 bg-slate-900 text-white rounded-xl font-bold text-[14px] hover:bg-slate-800 transition-all shadow-lg active:scale-[0.98] disabled:opacity-50"
+              className="w-full flex items-center justify-center gap-2 py-3 bg-slate-900 text-white rounded-xl font-bold text-[14px] hover:bg-slate-800 transition-all shadow-lg active:scale-[0.98] disabled:opacity-50"
             >
-              {loading ? 'A processar...' : 'Entrar no Sistema'}
+              {loading ? 'A processar...' : (isRegistering ? 'Criar Conta' : 'Entrar no Sistema')}
+              {!loading && <ArrowRight className="w-4 h-4" />}
             </button>
-          </div>
+
+            <button
+              type="button"
+              onClick={() => setIsRegistering(!isRegistering)}
+              className="w-full py-2 text-center text-[12px] text-slate-500 font-semibold hover:text-blue-600 transition-colors"
+            >
+              {isRegistering ? 'Já tem conta? Faça Login' : 'Não tem conta? Registe-se agora'}
+            </button>
+          </form>
 
           <div className="relative flex items-center py-2">
             <div className="flex-grow border-t border-slate-100"></div>
@@ -132,7 +202,7 @@ export default function Login() {
             <motion.div 
               initial={{ opacity: 0 }} 
               animate={{ opacity: 1 }}
-              className="text-center text-rose-600 text-[12px] font-bold bg-rose-50 p-2 rounded-lg"
+              className="text-center text-rose-600 text-[12px] font-bold bg-rose-50 p-2 rounded-lg border border-rose-100"
             >
               {error}
             </motion.div>
