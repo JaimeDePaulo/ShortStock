@@ -1,0 +1,6 @@
+{
+  "name": "ShortStock",
+  "description": "Sistema moderno de gestão de stock e inventário com dashboard, controlo de entradas/saídas, facturação POS e relatórios avançados. Desenvolvido por Jaime de Paulo.",
+  "requestFramePermissions": ["camera"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

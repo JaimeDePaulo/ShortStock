@@ -1,0 +1,44 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-sidebar: #0f172a;
+  --color-brand-bg: #f8fafc;
+  --color-brand-border: #e2e8f0;
+  --color-brand-text-main: #1e293b;
+  --color-brand-text-muted: #64748b;
+  --color-brand-primary: #2563eb;
+  
+  --font-sans: "Inter", "Segoe UI", "Roboto", "Helvetica", "Arial", sans-serif;
+}
+
+@layer base {
+  body {
+    @apply bg-brand-bg text-brand-text-main;
+  }
+}
+
+@layer components {
+  .panel {
+    @apply bg-white rounded-lg border border-brand-border shadow-sm overflow-hidden flex flex-col;
+  }
+
+  .panel-header {
+    @apply px-4 py-3 border-b border-brand-border flex items-center justify-between;
+  }
+
+  .panel-title {
+    @apply text-sm font-semibold text-brand-text-main;
+  }
+
+  .data-table {
+    @apply w-full border-collapse text-[13px];
+  }
+
+  .data-table th {
+    @apply bg-slate-50 px-4 py-3 text-left font-semibold text-brand-text-muted border-b border-brand-border sticky top-0;
+  }
+
+  .data-table td {
+    @apply px-4 py-3 border-b border-brand-border text-brand-text-main;
+  }
+}
