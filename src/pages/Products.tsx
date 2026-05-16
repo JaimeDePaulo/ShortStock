@@ -18,11 +18,9 @@ import { motion, AnimatePresence } from 'motion/react';
 import { dbService } from '../services/db';
 import { Product, Category } from '../types';
 import { cn, formatCurrency } from '../lib/utils';
-import { useAuth } from '../components/AuthProvider';
 import * as XLSX from 'xlsx';
 
 export default function Products() {
-  const { isAdmin } = useAuth();
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
@@ -131,15 +129,13 @@ export default function Products() {
             <Download className="w-3.5 h-3.5" />
             <span>Exportar</span>
           </button>
-          {isAdmin && (
-            <button 
-              onClick={() => { setEditingProduct(null); setIsModalOpen(true); }}
-              className="flex items-center gap-2 px-3 py-1.5 bg-blue-600 text-white rounded text-[12px] font-bold hover:bg-blue-700 transition-all uppercase tracking-wider shadow-sm"
-            >
-              <Plus className="w-3.5 h-3.5" />
-              <span>Novo Produto</span>
-            </button>
-          )}
+          <button 
+            onClick={() => { setEditingProduct(null); setIsModalOpen(true); }}
+            className="flex items-center gap-2 px-3 py-1.5 bg-blue-600 text-white rounded text-[12px] font-bold hover:bg-blue-700 transition-all uppercase tracking-wider shadow-sm"
+          >
+            <Plus className="w-3.5 h-3.5" />
+            <span>Novo Produto</span>
+          </button>
         </div>
       </header>
 
@@ -232,14 +228,12 @@ export default function Products() {
                       >
                         <Edit2 className="w-4 h-4" />
                       </button>
-                      {isAdmin && (
-                        <button 
-                          onClick={() => handleDelete(product.id)}
-                          className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded transition-all"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      )}
+                      <button 
+                        onClick={() => handleDelete(product.id)}
+                        className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded transition-all"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
                     </div>
                   </td>
                 </tr>

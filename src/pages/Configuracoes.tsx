@@ -1,17 +1,14 @@
-import { useState, useEffect, ReactNode, FormEvent } from 'react';
+import { useState, useEffect, FormEvent } from 'react';
 import { 
   Settings as SettingsIcon, 
   Plus, 
   Trash2, 
-  Save,
   Tag
 } from 'lucide-react';
 import { dbService } from '../services/db';
 import { Category } from '../types';
-import { useAuth } from '../components/AuthProvider';
 
 export default function Config() {
-  const { isAdmin } = useAuth();
   const [categories, setCategories] = useState<Category[]>([]);
   const [newCatName, setNewCatName] = useState('');
   const [loading, setLoading] = useState(true);
@@ -37,13 +34,11 @@ export default function Config() {
     }
   };
 
-  if (!isAdmin) return <div className="p-8 text-center">Acesso Negado</div>;
-
   return (
     <div className="max-w-4xl mx-auto space-y-8">
       <header>
         <h1 className="text-2xl font-bold text-slate-900">Configurações do Sistema</h1>
-        <p className="text-slate-500">Gira as definições globais do StockMaster.</p>
+        <p className="text-slate-500">Gira as definições globais do sistema.</p>
       </header>
 
       <section className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
@@ -91,20 +86,19 @@ export default function Config() {
       <section className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
         <div className="p-6 border-b border-slate-100 bg-slate-50 flex items-center gap-3">
           <SettingsIcon className="w-5 h-5 text-slate-600" />
-          <h3 className="font-bold text-slate-900">Preferências da Empresa</h3>
+          <h3 className="font-bold text-slate-900">Preferências do Sistema</h3>
         </div>
         <div className="p-6 space-y-4">
            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-1">
-                 <label className="text-xs font-semibold text-slate-500 uppercase">Nome da Empresa</label>
-                 <input type="text" defaultValue="StockMaster Lda" className="w-full px-4 py-2 border border-slate-200 rounded-lg bg-slate-50" readOnly />
+                 <label className="text-xs font-semibold text-slate-500 uppercase">Nome da Aplicação</label>
+                 <input type="text" defaultValue="ShortStock ERP" className="w-full px-4 py-2 border border-slate-200 rounded-lg bg-slate-50" readOnly />
               </div>
               <div className="space-y-1">
                  <label className="text-xs font-semibold text-slate-500 uppercase">Moeda</label>
                  <input type="text" defaultValue="EUR (€)" className="w-full px-4 py-2 border border-slate-200 rounded-lg bg-slate-50" readOnly />
               </div>
            </div>
-           <p className="text-xs text-slate-400 mt-4 italic">Algumas definições estão bloqueadas para a versão de demonstração.</p>
         </div>
       </section>
     </div>

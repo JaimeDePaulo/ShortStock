@@ -1,11 +1,8 @@
 import { ReactNode } from 'react';
 import Sidebar from './Sidebar';
 import { Search } from 'lucide-react';
-import { useAuth } from '../AuthProvider';
 
 export default function Layout({ children }: { children: ReactNode }) {
-  const { profile } = useAuth();
-  
   return (
     <div className="h-screen w-screen overflow-hidden flex bg-brand-bg font-sans">
       <Sidebar />
@@ -21,10 +18,10 @@ export default function Layout({ children }: { children: ReactNode }) {
           </div>
           <div className="flex items-center gap-4 text-[13px]">
             <div className="flex flex-col items-end">
-              <span className="text-brand-text-main font-semibold">Status: <strong className="text-blue-600">Administrador</strong></span>
+              <span className="text-brand-text-main font-semibold">Status: <strong className="text-blue-600">Sistema Aberto</strong></span>
             </div>
             <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold text-xs">
-              {profile?.name?.charAt(0).toUpperCase() || 'A'}
+              S
             </div>
           </div>
         </header>

@@ -13,10 +13,9 @@ import {
   AlertCircle
 } from 'lucide-react';
 import { motion } from 'motion/react';
-import { signOut, auth } from '../../lib/firebase';
-import { useAuth } from '../../components/AuthProvider';
-import { clsx, type ClassValue } from 'clsx';
-import { twMerge } from 'tailwind-merge';
+import {signOut, auth} from '../../lib/firebase';
+import {clsx, type ClassValue} from 'clsx';
+import {twMerge} from 'tailwind-merge';
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -24,20 +23,14 @@ function cn(...inputs: ClassValue[]) {
 
 export default function Sidebar() {
   const menuItems = [
-    { name: 'Dashboard', icon: LayoutDashboard, path: '/' },
-    { name: 'Produtos', icon: Package, path: '/produtos' },
-    { name: 'Entradas', icon: ArrowDownLeft, path: '/entradas' },
-    { name: 'Saídas', icon: ArrowUpRight, path: '/saidas' },
-    { name: 'Facturas', icon: FileText, path: '/facturas' },
-    { name: 'Relatórios', icon: PieChart, path: '/relatorios' },
-    { name: 'Configurações', icon: Settings, path: '/configuracoes' },
+    {name: 'Dashboard', icon: LayoutDashboard, path: '/'},
+    {name: 'Produtos', icon: Package, path: '/produtos'},
+    {name: 'Entradas', icon: ArrowDownLeft, path: '/entradas'},
+    {name: 'Saídas', icon: ArrowUpRight, path: '/saidas'},
+    {name: 'Facturas', icon: FileText, path: '/facturas'},
+    {name: 'Relatórios', icon: PieChart, path: '/relatorios'},
+    {name: 'Configurações', icon: Settings, path: '/configuracoes'},
   ];
-
-  const handleSignOut = async () => {
-    if (confirm('Tem certeza que deseja sair?')) {
-      await signOut(auth);
-    }
-  };
 
   return (
     <aside className="w-[220px] bg-brand-sidebar text-white h-screen fixed left-0 top-0 flex flex-col z-50">

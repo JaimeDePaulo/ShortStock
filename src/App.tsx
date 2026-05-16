@@ -13,7 +13,6 @@ import MoveOut from './pages/MoveOut';
 import History from './pages/History';
 import Reports from './pages/Reports';
 import Config from './pages/Configuracoes';
-import Users from './pages/Users';
 
 export default function App() {
   return (
@@ -52,12 +51,6 @@ export default function App() {
         <Route path="/relatorios" element={
           <Layout>
             <Reports />
-          </Layout>
-        } />
-
-        <Route path="/utilizadores" element={
-          <Layout>
-            <Users />
           </Layout>
         } />
 
