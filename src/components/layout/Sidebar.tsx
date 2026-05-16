@@ -21,7 +21,7 @@ function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export default function Sidebar() {
+export default function Sidebar({ isOpen }: { isOpen: boolean }) {
   const menuItems = [
     {name: 'Dashboard', icon: LayoutDashboard, path: '/'},
     {name: 'Produtos', icon: Package, path: '/produtos'},
@@ -33,9 +33,12 @@ export default function Sidebar() {
   ];
 
   return (
-    <aside className="w-[220px] bg-brand-sidebar text-white h-screen fixed left-0 top-0 flex flex-col z-50">
-      <div className="px-6 py-8 flex items-center gap-3">
-        <span className="text-xl font-black text-blue-500 tracking-tighter uppercase">ShortStock</span>
+    <aside className={cn(
+      "bg-brand-sidebar text-white h-screen fixed left-0 top-0 flex flex-col z-50 transition-all duration-300 overflow-hidden",
+      isOpen ? "w-[220px]" : "w-0"
+    )}>
+      <div className="px-6 py-8 flex items-center gap-3 shrink-0">
+        <span className="text-xl font-black text-blue-500 tracking-tighter uppercase whitespace-nowrap">ShortStock</span>
       </div>
 
       <nav className="flex-1 space-y-0.5 overflow-y-auto">
